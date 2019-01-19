@@ -9,7 +9,7 @@ def uploadImages(pre):
         for x in range(1, 4):
             for y in range(1, 4):
                 with open('./data/' + pre + '_0' + str(x) + '_0' + str(y) + '.png', 'rb') as f:
-                    requests.post('http://localhost:8080', files={'img.jpg': f})
+                    requests.post('http://demo0328641.mockable.io/upload', files={'img.jpg': f})
     except Exception as e:
         print(str(curTime) + " - UPLOAD FAILURE - " + str(e))
 

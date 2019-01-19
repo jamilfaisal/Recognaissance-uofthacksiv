@@ -1,15 +1,18 @@
 import time
 import timeit
 import image_slicer
-from PIL import Image
+import requests
 
-picName = "/tmp/capture.jpg"
+# Given the prefix of the filename, upload the images to the other server
+def uploadImages(pre):
+    try:
+        for x in range(1, 4):
+            for y in range(1, 4):
+                with open('./data/' + pre + '_0' + str(x) + '_0' + str(y) + '.png', 'rb') as f:
+                    requests.post('http://localhost:8080', files={'img.jpg': f})
+    except Exception as e:
+        print(str(curTime) + " - UPLOAD FAILURE - " + str(e))
 
-# Given the image path, show it on the screen
-def showImage(img):
-    image = Image.open(img)
-    image.show()
-    time.sleep(1)
 
 # Start VLC fullscreen vid
 # subprocess.check_output(["vlc", "--fullscreen", "--loop", "./data/360p.mp4"])
@@ -19,19 +22,17 @@ start = timeit.default_timer()
 
 while True:
     curTime = timeit.default_timer()
-    if curTime >= start + 4 and curTime <= start + 5:
-        print("Sending frame 1")
-        showImage('./data/1_01_01.png')
-        showImage('./data/1_01_02.png')
-        showImage('./data/1_02_01.png')
-        showImage('./data/1_02_02.png')
+    if curTime >= start + 4 and curTime <= start + 6:
+        print(str(curTime) + " - sending image for processing FR1")
+        image_slicer.slice('./data/1.jpg', 9)
+        uploadImages("1")
 
 
     # Resets the clock once the video is done
     if curTime >= start + 20:
-        print("Video Restart")
+        print(str(curTime) + " - RESETTING")
         start = timeit.default_timer()
 
-    print(curTime)
-    time.sleep(1)
+    print(str(curTime) + " - sending image for processing")
+    time.sleep(2)
 
